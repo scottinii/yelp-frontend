@@ -1,0 +1,36 @@
+.search-summary {
+    padding: 1.5rem 0;
+    max-width: 1100px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-summary p {
+    font: .9rem;
+}
+
+.search-summary h1:global(.subtitle) {
+    margin-bottom: 0;
+}
+
+.container {
+    background: grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container > * {
+    max-width: 1100px;
+}
+
+.filters {
+    width: 100%;
+    display: flex;
+    align-items:flex-start;
+}
+
+.filters > * {
+    margin-right: .7rem;
+}
