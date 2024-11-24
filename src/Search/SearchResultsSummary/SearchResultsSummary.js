@@ -1,12 +1,14 @@
 import React from "react";
 import styles from "./SearchResultsSummary.module.css";
 
-export function SearchResultSummary() {
+export function SearchResultSummary({ term = "Results", location = "your area", resultsCount = 543 }) { // Destructure with default values
     return (
         <div className={styles.container}>
             <div className={styles['search-summary']}>
-                <h1 className="subtitle"><strong>burgers</strong> berlin</h1>
-                <p>Showing 1-20 out of 543 results</p>
+                <h1 className="subtitle">
+                    <strong>{term}</strong> {location}
+                </h1>
+                <p>Showing 1-20 out of {resultsCount} results</p> {/* Dynamically render results count */}
             </div>
             <div className={styles.filters}>
                 <button className="button">
@@ -29,5 +31,5 @@ export function SearchResultSummary() {
                 </button>
             </div>
         </div>
-    )
+    );
 }
