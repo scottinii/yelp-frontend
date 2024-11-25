@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import * as api from "./api";
 
-export function useBusinessSearch(term, location) {
+export function useBusinessSearch(initialTerm, initialLocation) {
     const [businesses, setBusinesses] = useState([]);
-    const [amountResults, setAmountResults] = useState();
-    const [searchParams, setSearchParams] = useState({ term, location });
+    const [amountResults, setAmountResults] = useState(0);
+    const [searchParams, setSearchParams] = useState({
+        term: initialTerm,
+        location: initialLocation,
+    });
 
     useEffect(() => {
         if (!searchParams.term || !searchParams.location) {
@@ -12,7 +15,6 @@ export function useBusinessSearch(term, location) {
             return;
         }
 
-        setBusinesses([]);
         const fetchData = async () => {
             try {
                 console.log("Fetching data with:", searchParams);
@@ -28,8 +30,17 @@ export function useBusinessSearch(term, location) {
                 console.error("Error fetching data:", e.message);
             }
         };
+
         fetchData();
     }, [searchParams]);
 
-    return [businesses, amountResults, searchParams, setSearchParams];
+    // Define a `performSearch` function to update searchParams
+    const performSearch = (newParams) => {
+        setSearchParams((prev) => ({
+            ...prev,
+            ...newParams,
+        }));
+    };
+
+    return [businesses, amountResults, performSearch];
 }
