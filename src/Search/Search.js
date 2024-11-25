@@ -2,18 +2,25 @@ import React from "react";
 import { NavBar } from "../NavBar/NavBar";
 import { SearchResultSummary } from "./SearchResultsSummary/SearchResultsSummary";
 import { SearchResults } from "./SearchResults/SearchResults";
-import { useLocation, useNavigate } from "react-router-dom"; // Use `useNavigate` instead of `useHistory`
+import { useLocation, useNavigate } from "react-router-dom"; // Use `useNavigate`
 import { useBusinessSearch } from "../hooks/yelp-api/useBusinessSearch";
 
 export function Search() {
     const location = useLocation(); // Access the current URL location
     const navigate = useNavigate(); // Use `useNavigate` for programmatic navigation
     const params = new URLSearchParams(location.search);
-    const term = params.get("find_desc") || "Default Term";
-    const locationParam = params.get("find_loc") || "Default Location";
+    const term = params.get("find_desc");
+    const locationParam = params.get("find_loc");
 
     // Destructure `performSearch` from `useBusinessSearch`
     const [businesses, amountResults, performSearch] = useBusinessSearch(term, locationParam);
+
+    // Redirect to home if term or location is missing
+    React.useEffect(() => {
+        if (!term || !locationParam) {
+            navigate("/"); // Use navigate to redirect to the home page
+        }
+    }, [term, locationParam, navigate]);
 
     // Define the search function
     const search = (newTerm, newLocation) => {
