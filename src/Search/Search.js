@@ -2,21 +2,24 @@ import React from "react";
 import { NavBar } from "../NavBar/NavBar";
 import { SearchResultSummary } from "./SearchResultsSummary/SearchResultsSummary";
 import { SearchResults } from "./SearchResults/SearchResults";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Use `useNavigate` instead of `useHistory`
 import { useBusinessSearch } from "../hooks/yelp-api/useBusinessSearch";
 
 export function Search() {
-    const location = useLocation();
+    const location = useLocation(); // Access the current URL location
+    const navigate = useNavigate(); // Use `useNavigate` for programmatic navigation
     const params = new URLSearchParams(location.search);
-    const term = params.get('find_desc') || "Default Term";
-    const locationParam = params.get('find_loc') || "Default Location";
+    const term = params.get("find_desc") || "Default Term";
+    const locationParam = params.get("find_loc") || "Default Location";
 
     // Destructure `performSearch` from `useBusinessSearch`
     const [businesses, amountResults, performSearch] = useBusinessSearch(term, locationParam);
 
     // Define the search function
     const search = (newTerm, newLocation) => {
-        console.log('Search called with:', newTerm, newLocation);
+        const encodedTerm = encodeURIComponent(newTerm); // Properly encode the new term
+        const encodedLocation = encodeURIComponent(newLocation); // Properly encode the new location
+        navigate(`/search?find_desc=${encodedTerm}&find_loc=${encodedLocation}`); // Update URL
         performSearch({ term: newTerm, location: newLocation }); // Call performSearch
     };
 
@@ -33,4 +36,3 @@ export function Search() {
         </div>
     );
 }
-
