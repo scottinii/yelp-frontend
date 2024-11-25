@@ -2,28 +2,17 @@ import React, { useState } from "react";
 import styles from "./SearchBar.module.css";
 
 export function SearchBar({ term = "", location = "", search }) {
-    const [currentTerm, setCurrentTerm] = useState(term || "Food"); // Default to "Food"
-    const [currentLocation, setCurrentLocation] = useState(location || "New York"); // Default to "New York"
+    const [currentTerm, setCurrentTerm] = useState(term);
+    const [currentLocation, setCurrentLocation] = useState(location);
 
-    function submit(e) {
+    const submit = (e) => {
         e.preventDefault();
-
-        // Validate input fields
-        if (!currentTerm.trim() || !currentLocation.trim()) {
-            alert("Please enter both a search term and a location.");
-            return;
+        if (typeof search === 'function') {
+            search(currentTerm, currentLocation); // Pass new term and location
         }
+    };
 
-        // Debugging: Log search inputs
-        console.log("Search initiated with:", { term: currentTerm, location: currentLocation });
-
-        // Call the search function
-        if (typeof search === "function") {
-            search(currentTerm, currentLocation);
-        }
-    }
-
-    const sizeClass = 'is-medium'; // Define the CSS size class
+    const sizeClass = 'is-medium';
     return (
         <form onSubmit={submit}>
             <div className="field has-addons">
