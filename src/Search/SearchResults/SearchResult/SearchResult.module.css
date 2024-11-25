@@ -18,3 +18,11 @@
 .contact-info p {
     font-size: .85rem;
 }
+
+.business-tag {
+    margin-right: 8px; /* Space between tags */
+    margin-bottom: 8px; /* Space between rows if tags wrap */
+    background-color: #f1f1f1; /* Optional background color */
+    border-radius: 4px; /* Optional rounded corners */
+    padding: 4px 8px; /* Optional padding */
+}

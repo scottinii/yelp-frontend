@@ -8,6 +8,18 @@ export function SearchResult({ business }) {
         return <div />;
     }
 
+    // Generate tags for categories
+    const tags = business.categories.map((category) => (
+        <span key={category.alias} className={`tag ${styles['business-tag']}`}>
+            {category.title}
+        </span>
+    ));
+
+    // Generate address lines
+    const addressLines = business.location.display_address.map((line, index) => (
+        <p key={`${business.id}-address-${index}`}>{line}</p>
+    ));
+
     return (
         <div className={styles['search-result']}>
             {/* Business Image */}
@@ -19,22 +31,18 @@ export function SearchResult({ business }) {
             {/* Business Info */}
             <div className={styles['business-info']}>
                 <h2 className="subtitle">{business.name || "N/A"}</h2>
-                <BusinessRating reviewCount={business.review_count} rating={business.rating} />
+                <BusinessRating
+                    reviewCount={business.review_count}
+                    rating={business.rating}
+                />
                 <p>
-                    {business.price || "N/A"}{" "}
-                    {business.categories &&
-                        business.categories.map((category) => (
-                            <span key={category.alias} className="tag">
-                                {category.title}
-                            </span>
-                        ))}
+                    {business.price || "N/A"} {tags}
                 </p>
             </div>
             {/* Contact Info */}
             <div className={styles['contact-info']}>
-                <p>{business.display_phone || "N/A"}</p>
-                <p>{business.location?.address1 || "N/A"}</p>
-                <p>{business.location?.city || "N/A"}</p>
+                <p>{business.phone || "N/A"}</p>
+                {addressLines}
             </div>
         </div>
     );
