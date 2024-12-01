@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./TopNav.module.css";
 
 export function TopNav() {
@@ -9,8 +10,12 @@ export function TopNav() {
                 <span>Events</span>
             </div>
             <div className={styles.right}>
-                <span>Login</span>
-                <button className="button">Sign Up</button>
+            <Link to="/login">
+                    <button className="button">Login</button>
+                </Link>
+                <Link to="/signup">
+                    <button className="button">Sign Up</button>
+                </Link>
             </div>
         </div>
     );
