@@ -10,12 +10,10 @@ export function App() {
     const [signedInUser, setSignedInUser] = useState(null);
 
     const handleLogin = (email) => {
-      console.log("Handling login for email: ", email);
         setSignedInUser(email);
     };
 
     const handleSignUp = (email) => {
-      console.log("Handling signup for email: ", email);
         setSignedInUser(email);
     };
 

@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 export function LandingPage({ signedInUser, handleLogout }) {
     const navigate = useNavigate();
-    console.log("LandingPage received signedInUser: ", signedInUser);
 
     function search(term, location) {
         const urlEncodedTerm = encodeURIComponent(term);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../../UserContext";
+import { Link} from "react-router-dom";
+import profileImage from "../../assets/profile.jpeg"; 
 import styles from "./TopNav.module.css";
 
 export function TopNav({ signedInUser, handleLogout }) {
@@ -14,7 +14,7 @@ export function TopNav({ signedInUser, handleLogout }) {
         handleLogout(); 
         setDropdownVisible(false);
     };
-  console.log(signedInUser);
+    
   return (
     <div className={styles["top-nav"]}>
       <div className={styles.left}>
@@ -26,8 +26,7 @@ export function TopNav({ signedInUser, handleLogout }) {
           <div className={styles.profile}>
             <span className={styles.email}>{signedInUser}</span>
             <img
-              src="/assets/profile.jpeg"
-              alt="Profile Icon"
+              src={profileImage}
               className={styles["profile-icon"]}
               onClick={toggleDropdown}
             />
