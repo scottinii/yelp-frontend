@@ -1,8 +1,11 @@
-:root{
-    --element-spacing: 1.5rem
+:root {
+    --element-spacing: 1.5rem;
+    --profile-icon-size: 32px; /* Size of the profile icon */
+    --font-color: #333; /* General text color */
+    --hover-color: #555; /* Hover effect for icons or text */
 }
 
-.top-nav{
+.top-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,6 +15,13 @@
 
 .left > * {
     margin-right: var(--element-spacing);
+    cursor: pointer;
+    color: var(--font-color);
+    text-decoration: none;
+}
+
+.left > *:hover {
+    color: var(--hover-color);
 }
 
 .right {
@@ -21,4 +31,37 @@
 
 .right > * {
     margin-left: var(--element-spacing);
+    cursor: pointer;
+}
+
+.profile {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.dropdown-menu span {
+    display: block;
+    padding: 5px;
+    color: #333;
+    font-size: 14px;
+    text-align: center;
 }

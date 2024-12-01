@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import { LandingPage } from "./LandingPage/LandingPage";
 import { Search } from "./Search/Search";
 import Login from "./LoginPage/Login";
 import SignUp from "./SignUpPage/SignUp";
-import { Routes, Route } from 'react-router-dom';
+import { UserProvider } from "./UserContext";
 
-function App() {
-  return (
-    <Routes>
-      <Route path="/search" element={<Search />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<LandingPage />} />
-    </Routes>
-  );
+export function App() {
+    const [signedInUser, setSignedInUser] = useState(null);
+
+    const handleLogin = (email) => {
+      console.log("Handling login for email: ", email);
+        setSignedInUser(email);
+    };
+
+    const handleSignUp = (email) => {
+      console.log("Handling signup for email: ", email);
+        setSignedInUser(email);
+    };
+
+    const handleLogout = () => {
+      setSignedInUser(null);
+  };
+
+    return (
+      <UserProvider>
+      <Routes>
+          <Route path="/search" element={<Search />} />
+          <Route path="/" element={<LandingPage signedInUser={signedInUser} handleLogout={handleLogout} />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/signup" element={<SignUp onSignUp={handleSignUp} />} />
+      </Routes>
+      </UserProvider>
+    );
 }
-
-export default App;

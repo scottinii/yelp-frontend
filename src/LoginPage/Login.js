@@ -1,19 +1,27 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-const Login = () => {
-    const [username, setUsername] = useState("");
+const Login = ({ onLogin }) => {
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = () => {
-        const storedPassword = Cookies.get(username);
-        if (storedPassword && storedPassword === password) {
-            alert("Login successful! Welcome back.");
-            setUsername("");
-            setPassword("");
+        const storedPassword = Cookies.get(email);
+
+        if (!storedPassword) {
+            alert("No account found with this email. Please sign up.");
+            return;
+        }
+
+        if (storedPassword === password) {
+            console.log("Logging in with email: ", email);
+            onLogin(email);
+            navigate("/")
         } else {
-            alert("Invalid username or password.");
+            alert("Invalid email or password.");
         }
     };
 
@@ -27,16 +35,18 @@ const Login = () => {
                 }}
             >
                 <input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
                 />
                 <button type="submit">Login</button>
             </form>
