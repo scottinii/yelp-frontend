@@ -1,27 +1,33 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const UserContext = createContext();
 
-export function UserProvider({ children }) {
+export const UserProvider = ({ children }) => {
   const [signedInUser, setSignedInUser] = useState(null);
 
-  const handleLogin = (email) => {
-    setSignedInUser(email); 
+  useEffect(() => {
+      const savedUser = Cookies.get("signedInUser");
+      if (savedUser) {
+          setSignedInUser(savedUser);
+      }
+  }, []); 
+
+  const handleLogin = (user) => {
+      setSignedInUser(user);
+      Cookies.set("signedInUser", user, { expires: 7 }); 
   };
 
   const handleLogout = () => {
-    setSignedInUser(null); 
-  };
-
-  const handleSignUp = (email) => {
-    setSignedInUser(email); 
+      setSignedInUser(null);
+      Cookies.remove("signedInUser"); 
   };
 
   return (
-    <UserContext.Provider value={{ signedInUser, handleLogin, handleLogout, handleSignUp }}>
-      {children}
-    </UserContext.Provider>
+      <UserContext.Provider value={{ signedInUser, handleLogin, handleLogout }}>
+          {children}
+      </UserContext.Provider>
   );
-}
+};
 
 export const useUser = () => useContext(UserContext);

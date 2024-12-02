@@ -23,12 +23,12 @@ export function App() {
 
     return (
       <UserProvider>
-      <Routes>
-          <Route path="/search" element={<Search />} />
-          <Route path="/" element={<LandingPage signedInUser={signedInUser} handleLogout={handleLogout} />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/signup" element={<SignUp onSignUp={handleSignUp} />} />
-      </Routes>
+        <Routes>
+            <Route path="/search" element={<Search signedInUser={signedInUser} handleLogout={handleLogout}/>} />
+            <Route path="/" element={<LandingPage signedInUser={signedInUser} handleLogout={handleLogout} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/signup" element={<SignUp onSignUp={handleSignUp} />} />
+        </Routes>
       </UserProvider>
     );
 }

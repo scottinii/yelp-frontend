@@ -4,6 +4,7 @@ import { SearchResultSummary } from "./SearchResultsSummary/SearchResultsSummary
 import { SearchResults } from "./SearchResults/SearchResults";
 import { useLocation, useNavigate } from "react-router-dom"; // Use `useNavigate`
 import { useBusinessSearch } from "../hooks/yelp-api/useBusinessSearch";
+import { useUser } from "../UserContext";
 
 export function Search() {
     const location = useLocation(); // Access the current URL location
@@ -11,6 +12,9 @@ export function Search() {
     const params = new URLSearchParams(location.search);
     const term = params.get("find_desc");
     const locationParam = params.get("find_loc");
+
+    const { signedInUser, handleLogout } = useUser();
+    console.log("Signed-in user in Search:", signedInUser);
 
     // Destructure `performSearch` from `useBusinessSearch`
     const [businesses, amountResults, performSearch] = useBusinessSearch(term, locationParam);
@@ -32,7 +36,7 @@ export function Search() {
 
     return (
         <div>
-            <NavBar term={term} location={locationParam} search={search} />
+            <NavBar term={term} location={locationParam} search={search} signedInUser={signedInUser} handleLogout={handleLogout} />
             <SearchResultSummary 
                 term={term} 
                 location={locationParam} 

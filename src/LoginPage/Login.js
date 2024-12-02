@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserContext"; 
 import "./Login.css";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const { handleLogin } = useUser(); 
 
-    const handleLogin = () => {
+    const handleLoginSubmit = () => {
         const storedPassword = Cookies.get(email);
 
         if (!storedPassword) {
@@ -17,9 +19,9 @@ const Login = ({ onLogin }) => {
         }
 
         if (storedPassword === password) {
-            console.log("Logging in with email: ", email);
-            onLogin(email);
-            navigate("/")
+            Cookies.set("signedInUser", email, { expires: 0 });
+            handleLogin(email); 
+            navigate("/"); 
         } else {
             alert("Invalid email or password.");
         }
@@ -31,7 +33,7 @@ const Login = ({ onLogin }) => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handleLogin();
+                    handleLoginSubmit();
                 }}
             >
                 <input
