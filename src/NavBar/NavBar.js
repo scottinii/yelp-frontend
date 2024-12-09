@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import logo from "../assets/logo.png";
-import profileImage from "../assets/profile.jpeg"; 
-import styles from "./NavBar.module.css";
-import { SearchBar } from "../SearchBar/SearchBar";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
+import profileImage from "../assets/profile.jpeg";
+import { SearchBar } from "../SearchBar/SearchBar";
+import styles from "./NavBar.module.css";
 
 export function NavBar({ signedInUser, handleLogout, term, location, search }) {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -42,6 +42,9 @@ export function NavBar({ signedInUser, handleLogout, term, location, search }) {
                 </Link>
                 <Link to="/signup" className="button">
                 Sign Up
+                </Link>
+                <Link to="/review" className="button">
+                Reviews
                 </Link>
             </>
             )}
