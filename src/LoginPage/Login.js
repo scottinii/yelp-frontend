@@ -1,29 +1,38 @@
 import React, { useState } from "react";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import { useUser } from "../UserContext"; 
 import "./Login.css";
+import { API_BASE_URL } from "../config";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const { handleLogin } = useUser(); 
+    const { handleLogin } = useUser();
 
-    const handleLoginSubmit = () => {
-        const storedPassword = Cookies.get(email);
+    const handleLoginSubmit = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-        if (!storedPassword) {
-            alert("No account found with this email. Please sign up.");
-            return;
-        }
+            const data = await response.json();
 
-        if (storedPassword === password) {
-            Cookies.set("signedInUser", email, { expires: 0 });
-            handleLogin(email); 
-            navigate("/"); 
-        } else {
-            alert("Invalid email or password.");
+            if (response.ok) {
+                Cookies.set("signedInUser", email, { expires: 1 }); 
+                handleLogin(email); 
+                navigate("/");
+            } else {
+                alert(data.message); 
+            }
+        } catch (error) {
+            console.error("Error logging in:", error);
+            alert("An error occurred while trying to log in. Please try again.");
         }
     };
 
