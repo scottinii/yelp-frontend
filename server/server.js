@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
+const reviewsRoutes = require('./routes/reviewAuth.js');
 const cors = require("cors");
 require("dotenv").config();
 
@@ -19,6 +20,7 @@ mongoose
 
 // Routes
 app.use("/api", authRoutes);
+app.use("/api/reviews", reviewsRoutes);  // Reviews routes under /api/reviews
 
 // Start Server
 const PORT = process.env.PORT || 5000;

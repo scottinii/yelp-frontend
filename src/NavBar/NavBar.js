@@ -20,6 +20,12 @@ export function NavBar({ signedInUser, handleLogout, term, location, search }) {
         <div className={styles['nav-bar']}>
             <Link to="/"><img src={logo} className={styles.logo} alt="logo" /></Link>
             <SearchBar small term={term} location={location} search={search} /> {/* Pass `search` */}
+
+            {/* Only show Reviews link when the user is logged in */}
+            {signedInUser && (
+                <Link to="/review" className="button">Reviews</Link>
+            )}
+
             {signedInUser ? (
                 <div className={styles.profile}>
                     <span className={styles.email}>{signedInUser}</span>
@@ -42,9 +48,6 @@ export function NavBar({ signedInUser, handleLogout, term, location, search }) {
                 </Link>
                 <Link to="/signup" className="button">
                 Sign Up
-                </Link>
-                <Link to="/review" className="button">
-                Reviews
                 </Link>
             </>
             )}

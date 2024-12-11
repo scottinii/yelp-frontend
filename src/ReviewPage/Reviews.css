@@ -18,7 +18,7 @@
 .reviews-container h2 {
     font-size: 28px;
     margin-bottom: 20px;
-    color: #555;
+    color: #333;
 }
 
 form {
@@ -56,8 +56,7 @@ textarea {
 
 button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    color: rgb(15, 9, 9);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -66,7 +65,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #f9933a;
 }
 
 .review-list {
@@ -98,4 +97,24 @@ button:hover {
 .review-item .star {
     font-size: 20px;
     color: #ffc107;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: red;
+}
+
+.dark-text {
+    color: #333;
 }

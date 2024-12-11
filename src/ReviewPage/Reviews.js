@@ -1,48 +1,108 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import { API_BASE_URL } from "../config";
 import "./Reviews.css";
 
 const Reviews = () => {
-    const [restaurantName, setRestaurantName] = useState(""); // State to store restaurant name
+    const [restaurantName, setRestaurantName] = useState("");
     const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState("");
-    const [rating, setRating] = useState(0); // Rating state to store selected rating
+    const [rating, setRating] = useState(0);
+    const loggedInUser = Cookies.get("signedInUser"); // Get logged-in user email
+    const navigate = useNavigate();
 
-    // Load reviews from local storage when the component mounts
+    // Fetch user reviews from the backend when the component mounts
     useEffect(() => {
-        const savedReviews = localStorage.getItem("reviews");
-        if (savedReviews) {
-            setReviews(JSON.parse(savedReviews)); // Parse and set reviews from localStorage
-        }
-    }, []);
+        const fetchUserReviews = async () => {
+            if (loggedInUser) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/reviews?email=${loggedInUser}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setReviews(data.reviews); // Assuming response contains the reviews
+                    } else {
+                        console.log("Error fetching reviews:", data.message);
+                    }
+                } catch (error) {
+                    console.error("Error fetching reviews:", error);
+                }
+            }
+        };
+        fetchUserReviews();
+    }, [loggedInUser]);
 
-    // Save reviews to local storage whenever they change
-    useEffect(() => {
-        if (reviews.length > 0) {
-            localStorage.setItem("reviews", JSON.stringify(reviews)); // Save reviews to localStorage
-        }
-    }, [reviews]);
-
-    const handleReviewSubmit = (e) => {
+    // Submit a new review to the backend
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
         if (newReview && rating && restaurantName) {
-            const review = { text: newReview, rating, restaurantName };
-            const updatedReviews = [...reviews, review];
-            setReviews(updatedReviews); // Update state with the new review
-            setNewReview(""); // Reset the review input field
-            setRating(0); // Reset the rating
-            setRestaurantName(""); // Reset the restaurant name input
+            const review = {
+                text: newReview,
+                rating,
+                restaurantName,
+                userEmail: loggedInUser,
+            };
+            try {
+                const response = await fetch(`${API_BASE_URL}/reviews`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(review),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setReviews((prevReviews) => [...prevReviews, review]);
+                    setNewReview("");
+                    setRating(0);
+                    setRestaurantName("");
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error("Error submitting review:", error);
+                alert("An error occurred while submitting your review.");
+            }
         } else {
             alert("Please provide both a review, a rating, and a restaurant name.");
         }
     };
 
-    const handleStarClick = (index) => {
-        setRating(index + 1); // Ratings are 1-based
+    // Handle review deletion
+    const handleDeleteReview = async (indexToDelete) => {
+        const reviewToDelete = reviews[indexToDelete]; // Get the review object
+        const reviewId = reviewToDelete._id; // Assuming review has an _id field
+        
+        try {
+            // Send a DELETE request to the backend with the review ID
+            const response = await fetch(`${API_BASE_URL}/reviews`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: reviewId }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setReviews((prevReviews) => prevReviews.filter((_, index) => index !== indexToDelete));
+            } else {
+                console.error('Failed to delete review:', data.message);
+                alert('Failed to delete review');
+            }
+        } catch (error) {
+            console.error('Error deleting review:', error);
+            alert('An error occurred while deleting your review');
+        }
     };
 
     return (
         <div className="reviews-container">
-            <h1>Write a Review</h1>
+            <button className="close-button" onClick={() => navigate("/")}>
+                ✖
+            </button>
+            <h1>Your Reviews</h1>
             <form onSubmit={handleReviewSubmit}>
                 <input
                     type="text"
@@ -62,7 +122,7 @@ const Reviews = () => {
                         <span
                             key={index}
                             className={index < rating ? "star filled" : "star"}
-                            onClick={() => handleStarClick(index)}
+                            onClick={() => setRating(index + 1)}
                         >
                             ★
                         </span>
@@ -73,24 +133,26 @@ const Reviews = () => {
             <div className="review-list">
                 {reviews.length > 0 ? (
                     reviews.map((review, index) => (
-                        <div key={index} className="review-item">
-                            <p><strong>Restaurant:</strong> {review.restaurantName}</p>
-                            <p><strong>Review:</strong> {review.text}</p>
-                            <p><strong>Stars:</strong></p>
+                        <div key={review._id} className="review-item">
+                            <p><strong className="dark-text">Restaurant:</strong> {review.restaurantName}</p>
+                            <p><strong className="dark-text">Review:</strong> {review.text}</p>
+                            <p><strong className="dark-text">Stars:</strong></p>
                             <div className="star-rating">
                                 {[...Array(5)].map((_, starIndex) => (
                                     <span
                                         key={starIndex}
-                                        className={
-                                            starIndex < review.rating
-                                                ? "star filled"
-                                                : "star"
-                                        }
+                                        className={starIndex < review.rating ? "star filled" : "star"}
                                     >
                                         ★
                                     </span>
                                 ))}
                             </div>
+                            <button
+                                className="delete-button"
+                                onClick={() => handleDeleteReview(index)}
+                            >
+                                Delete
+                            </button>
                         </div>
                     ))
                 ) : (
